@@ -1,64 +1,56 @@
 # Black-Scholes Options Pricing & Implied Volatility
 
-## Overview
-Python implementation of the Black-Scholes-Merton options pricing model, 
-applied to real Tesla (TSLA) options data. Calculates theoretical option 
-prices, derives implied volatility from live market prices, and plots the 
-implied volatility smile across strike prices.
+Python implementation of the Black-Scholes-Merton model applied to live
+Tesla (TSLA) options data. Prices European calls and puts, back-solves
+for implied volatility using Brent's method, and visualises the
+resulting volatility smile.
 
-## What This Project Does
-1. Implements the Black-Scholes formula from scratch to price European 
-   call and put options
-2. Verifies the model using put-call parity
-3. Pulls live Tesla option chain data via the yfinance API
-4. Back-solves for implied volatility using Brent's numerical method
-5. Plots the implied volatility smile across strikes and analyses 
-   the volatility skew
-
-## Key Findings
-- Tesla's current price: ~$395
-- Minimum implied volatility of 43.6% occurs at the money (near $395)
-- Strong left skew visible — deep out of the money puts carry 
-  significantly higher IV (200%+) than at the money options
-- This skew reflects the market pricing in far greater fear of a 
-  sharp downside move than an equivalent upside rally
-- The smile shape confirms Black-Scholes assumption of constant 
-  volatility is violated in practice — real markets price tail 
-  risk asymmetrically
-
-## Volatility Smile
 ![Volatility Smile](volatility_smile.png)
 
-## The Black-Scholes Formula
-```
-C = S·N(d₁) - K·e^(-rT)·N(d₂)
+## What It Does
 
+1. Implements BSM from scratch — no pricing libraries
+2. Verifies correctness via put-call parity
+3. Fetches live TSLA option chain data via `yfinance`
+4. Inverts the model numerically to extract implied volatility per strike
+5. Plots the IV smile and analyses the skew structure
+
+## The Model
+C = S·N(d₁) - K·e^(-rT)·N(d₂)
 d₁ = [ln(S/K) + (r + σ²/2)T] / σ√T
 d₂ = d₁ - σ√T
+S = spot price  |  K = strike  |  T = time to expiry (years)
+r = risk-free rate  |  σ = volatility  |  N(·) = cumulative normal CDF
 
-Where:
-S = current stock price
-K = strike price  
-T = time to expiry (years)
-r = risk-free rate
-σ = volatility
-N() = cumulative normal distribution
-```
+## Key Findings (TSLA, fetched ~April 2025)
 
-## Implied Volatility
-The model is inverted using Brent's method to back-solve for the 
-volatility implied by each option's market price. Where implied 
-volatility exceeds historical realised volatility, options are 
-considered overpriced — a signal to sell options and collect premium.
+- ATM implied volatility: ~43.6% at spot ≈ $395
+- Pronounced left skew — deep OTM puts carry IV of 200%+
+- The skew reflects asymmetric tail-risk pricing: markets price
+  a sharp downside move far more heavily than an equivalent rally
+- Confirms BSM's constant-volatility assumption breaks down in
+  practice — the smile itself is evidence of model misspecification
 
-## Libraries
-- numpy
-- matplotlib  
-- yfinance
-- scipy
+## Limitations & Extensions
 
-## How to Run
+BSM assumes constant volatility and log-normal returns — both
+violated empirically. The volatility smile is a direct consequence
+of this. Natural extensions include:
+
+- **Stochastic volatility**: Heston model allows σ to follow its
+  own mean-reverting process, producing a more realistic smile
+- **Local volatility**: Dupire's framework back-solves for a
+  deterministic σ(S,t) surface consistent with all market prices
+- **Jump diffusion**: Merton's jump model adds Poisson-distributed
+  price jumps, better capturing crash risk priced into OTM puts
+
+## Stack
+
+`numpy` · `scipy` · `matplotlib` · `yfinance`
+
+## Run
+
 ```bash
-pip install numpy matplotlib yfinance scipy
+pip install numpy scipy matplotlib yfinance
 python black_scholes.py
 ```
