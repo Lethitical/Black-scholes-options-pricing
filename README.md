@@ -16,12 +16,19 @@ resulting volatility smile.
 5. Plots the IV smile and analyses the skew structure
 
 ## The Model
-C = S·N(d₁) - K·e^(-rT)·N(d₂)
-d₁ = [ln(S/K) + (r + σ²/2)T] / σ√T
-d₂ = d₁ - σ√T
-S = spot price  |  K = strike  |  T = time to expiry (years)
-r = risk-free rate  |  σ = volatility  |  N(·) = cumulative normal CDF
 
+$$C = S \cdot N(d_1) - K \cdot e^{-rT} \cdot N(d_2)$$
+
+$$d_1 = \frac{\ln(S/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}}, \quad d_2 = d_1 - \sigma\sqrt{T}$$
+
+| Symbol | Meaning |
+|--------|---------|
+| $S$ | Spot price |
+| $K$ | Strike price |
+| $T$ | Time to expiry (years) |
+| $r$ | Risk-free rate |
+| $\sigma$ | Volatility |
+| $N(\cdot)$ | Cumulative normal CDF |
 ## Key Findings (TSLA, fetched ~April 2025)
 
 - ATM implied volatility: ~43.6% at spot ≈ $395
