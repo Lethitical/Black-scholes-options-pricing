@@ -29,6 +29,7 @@ $$d_1 = \frac{\ln(S/K) + (r + \sigma^2/2)T}{\sigma\sqrt{T}}, \quad d_2 = d_1 - \
 | $r$ | Risk-free rate |
 | $\sigma$ | Volatility |
 | $N(\cdot)$ | Cumulative normal CDF |
+
 ## Key Findings (TSLA, fetched ~April 2025)
 
 - ATM implied volatility: ~43.6% at spot ≈ $395
